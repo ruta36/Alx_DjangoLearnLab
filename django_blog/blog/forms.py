@@ -22,7 +22,7 @@ class CustomUserCreationForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
-        widget=TagWidget(),
+        widgets=TagWidget(),
         required=False
     )
 
