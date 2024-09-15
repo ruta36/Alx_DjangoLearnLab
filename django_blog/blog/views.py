@@ -86,20 +86,21 @@ class PostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form.save_m2m()
             return redirect('post-list')
     else:
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
 
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-     post = get_object_or_404(Post, pk=pk)
+class PostUpdateView(request, pk):
+    post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():

@@ -20,12 +20,30 @@ class CustomUserCreationForm(UserCreationForm):
         return user
     
 class PostForm(forms.ModelForm):
-    tags = tags = TagField(required=False) 
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=TagWidget(),
+        required=False
+    )
+
     class Meta:
         model = Post
-        fields = ['title', 'content','tags']
+        fields = ['title', 'content', 'tags']
+
+    def clean_tags(self):
+        tags = self.cleaned_data['tags']
+        if tags:
+            tags = [tag.strip() for tag in tags.split(',')]
+            tags = [Tag.objects.get_or_create(name=tag)[0] for tag in tags]
+        return tags
     
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+        
+        
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name']
