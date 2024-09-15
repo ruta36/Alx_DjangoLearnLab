@@ -11,6 +11,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.db.models import Q
+from taggit.models import Tag
 
 
 
@@ -176,3 +177,12 @@ class TaggedPostsView(ListView):
     def get_queryset(self):
         tag_name = self.kwargs['tag_name']
         return Post.objects.filter(tags__name=tag_name)
+
+
+class PostByTagListView(ListView):
+    template_name = 'blog/post_list.html'  # Use your template path
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug)
