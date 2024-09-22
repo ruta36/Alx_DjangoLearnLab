@@ -26,6 +26,8 @@ class FeedViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        followed_users = self.request.user.following.all()
-        return Post.objects.filter(author__in=followed_users).order_by('-created_at')
+        following_users = self.request.user.following.all()
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
+    
+    
 
