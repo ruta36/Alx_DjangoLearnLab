@@ -33,9 +33,9 @@ class LikePost(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = Post.objects.get(id=pk)
+        post = get_object_or_404(Post, pk=pk)  
         like, created = Like.objects.get_or_create(post=post, user=request.user)
-        
+
         if created:
             # Create notification
             Notification.objects.create(
@@ -52,11 +52,10 @@ class UnlikePost(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = Post.objects.get(id=pk)
+        post = get_object_or_404(Post, pk=pk)  
         try:
             like = Like.objects.get(post=post, user=request.user)
             like.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Like.DoesNotExist:
             return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
-
