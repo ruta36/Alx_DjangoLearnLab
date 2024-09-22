@@ -25,7 +25,7 @@ class FollowUser(APIView):
             request.user.following.add(user_to_follow)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class UnfollowUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -36,4 +36,4 @@ class UnfollowUser(APIView):
             request.user.following.remove(user_to_unfollow)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
