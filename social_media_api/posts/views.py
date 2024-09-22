@@ -34,7 +34,7 @@ class FeedViewSet(viewsets.ReadOnlyModelViewSet):
         following_users = self.request.user.following.all()
         return Post.objects.filter(author__in=following_users).order_by('-created_at')
     
-class LikePost(APIView):
+class LikePost(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
@@ -53,7 +53,7 @@ class LikePost(APIView):
             return Response(status=status.HTTP_201_CREATED)
         return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-class UnlikePost(APIView):
+class UnlikePost(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
