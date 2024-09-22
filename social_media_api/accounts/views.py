@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserSerializer, CustomUserSerializer
 from rest_framework import permissions, status
 from rest_framework.views import APIView
 from .models import CustomUser
@@ -15,7 +15,12 @@ class LoginView(ObtainAuthToken):
         user = CustomUser.objects.get(username=request.data['username'])
         return Response({'token': response.data['token'], 'user': UserSerializer(user).data})
 
-
+class UserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    
 class FollowUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
