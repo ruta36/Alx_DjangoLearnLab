@@ -16,10 +16,13 @@ class LoginView(ObtainAuthToken):
         return Response({'token': response.data['token'], 'user': UserSerializer(user).data})
 
 class UserListView(generics.ListAPIView):
-    queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+   
+    def get(self, request, *args, **kwargs):
+        users = CustomUser.objects.all()
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data) 
     
 class FollowUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
