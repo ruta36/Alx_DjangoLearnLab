@@ -15,7 +15,7 @@ class LoginView(ObtainAuthToken):
         user = CustomUser.objects.get(username=request.data['username'])
         return Response({'token': response.data['token'], 'user': UserSerializer(user).data})
 
-class UserListView(generics.ListAPIView):
+class UserListView(generics.GenericAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.IsAuthenticated]
    
